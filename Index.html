@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Loan Tenure Reducer — Free Your Future Faster</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1923;
+    --slate: #2d3f50;
+    --mist: #8fa3b4;
+    --paper: #f5f3ef;
+    --cream: #faf8f4;
+    --gold: #c8961e;
+    --gold-light: #f0c84a;
+    --green: #1a7a5e;
+    --green-light: #e6f5f0;
+    --blue: #1a4f7a;
+    --blue-light: #e6f0f8;
+    --coral: #c84a2c;
+    --coral-light: #fdf0ec;
+    --purple: #5a3d7a;
+    --purple-light: #f0ecf8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  h1, h2, h3 {
+    font-family: 'DM Serif Display', serif;
+  }
+
+  .hero-bg {
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 80% 50%, rgba(200,150,30,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(26,79,122,0.3) 0%, transparent 60%);
+  }
+
+  .grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .input-field {
+    width: 100%;
+    background: white;
+    border: 2px solid #e2ddd8;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--ink);
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .input-field:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 4px rgba(200,150,30,0.12);
+  }
+
+  .input-field::placeholder { color: #bbb; }
+
+  .range-input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #e2ddd8;
+    outline: none;
+  }
+
+  .range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(200,150,30,0.4);
+    transition: transform 0.15s;
+  }
+
+  .range-input::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px;
+    border: 1.5px solid #e8e4de;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.09);
+  }
+
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .card-m1::before { background: linear-gradient(90deg, var(--blue), #4a90d9); }
+  .card-m2::before { background: linear-gradient(90deg, var(--green), #45c9a0); }
+  .card-m3::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-gold { background: #fdf4e0; color: var(--gold); }
+
+  .stat-big {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .savings-pill {
+    display: inline-block;
+    background: var(--green-light);
+    color: var(--green);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .chart-wrap {
+    background: white;
+    border-radius: 20px;
+    border: 1.5px solid #e8e4de;
+    padding: 28px;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 14px 20px;
+    align-items: center;
+  }
+
+  .table-row:not(:last-child) {
+    border-bottom: 1px solid #f0ede8;
+  }
+
+  .table-head {
+    background: var(--ink);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .table-body-row:hover { background: #faf8f4; }
+
+  .progress-bar-bg {
+    background: #f0ede8;
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: slideUp 0.5s forwards;
+  }
+
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .number-animate {
+    transition: all 0.3s;
+  }
+
+  .tooltip-wrap { position: relative; display: inline-block; }
+  .tooltip-box {
+    display: none;
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    font-size: 0.78rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    white-space: nowrap;
+    z-index: 10;
+    line-height: 1.5;
+    max-width: 220px;
+    white-space: normal;
+    text-align: center;
+  }
+  .tooltip-wrap:hover .tooltip-box { display: block; }
+
+  @media (max-width: 640px) {
+    .stat-big { font-size: 1.7rem; }
+    .table-row { grid-template-columns: 2fr 1fr 1fr; font-size: 0.82rem; }
+    .table-row .col-hide { display: none; }
+  }
+
+  /* card-internal range sliders */
+  #m2Range::-webkit-slider-thumb, #m3StepRange::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 18px; height: 18px; border-radius: 50%;
+    cursor: pointer; transition: transform 0.15s;
+  }
+  #m2Range::-webkit-slider-thumb { background: #1a7a5e; box-shadow: 0 2px 6px rgba(26,122,94,.4); }
+  #m3StepRange::-webkit-slider-thumb { background: #c8961e; box-shadow: 0 2px 6px rgba(200,150,30,.4); }
+  #m2Range::-webkit-slider-thumb:hover, #m3StepRange::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  /* ── Branding bar ── */
+  .brand-bar {
+    background: white;
+    border-bottom: 1px solid #ede9e3;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+  }
+
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ig-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .follow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: white;
+    background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+    box-shadow: 0 4px 14px rgba(220,39,67,0.35);
+    cursor: pointer;
+    border: none;
+  }
+
+  .follow-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+
+  /* ── WhatsApp share section ── */
+  .wa-section {
+    background: white;
+    border-radius: 20px;
+    border: 1.5px solid #e8e4de;
+    padding: 32px;
+    margin-bottom: 10px;
+  }
+
+  .wa-input {
+    width: 100%;
+    background: #faf8f4;
+    border: 2px solid #e2ddd8;
+    border-radius: 12px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .wa-input:focus {
+    border-color: #25d366;
+    box-shadow: 0 0 0 4px rgba(37,211,102,0.12);
+    background: white;
+  }
+
+  .wa-input::placeholder { color: #bbb; }
+
+  .wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 28px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    background: #25d366;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .wa-btn:hover {
+    background: #1ebe5d;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+  }
+
+  .wa-btn:active { transform: translateY(0); }
+
+  .wa-btn svg { width: 22px; height: 22px; }
+
+  .wa-success {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    color: #166534;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* ── Modal overlay ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,25,35,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal-box {
+    background: white;
+    border-radius: 24px;
+    padding: 36px 32px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+    position: relative;
+    animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: #f0ede8;
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #666;
+    font-size: 1.1rem;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: #e2ddd8; }
+</style>
+</head>
+<body>
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <div class="brand-name">
+    <div class="ig-avatar">S</div>
+    <div>
+      <div style="font-size:1rem;line-height:1.2">subhuti</div>
+      <div style="font-size:0.68rem;font-family:'DM Sans',sans-serif;font-weight:500;color:#9ca3af;letter-spacing:0.03em">@_unfiltered_heart_</div>
+    </div>
+  </div>
+  <button class="follow-btn" onclick="document.getElementById('igModal').classList.add('open')">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+    Follow on Instagram
+  </button>
+</div>
+
+<!-- INSTAGRAM FOLLOW MODAL -->
+<div class="modal-overlay" id="igModal">
+  <div class="modal-box text-center">
+    <button class="modal-close" onclick="document.getElementById('igModal').classList.remove('open')">✕</button>
+    <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.8rem;color:white;font-weight:700;font-family:'DM Serif Display',serif">S</div>
+    <h3 class="text-xl mb-1">subhuti</h3>
+    <p class="text-gray-400 text-sm mb-1">@_unfiltered_heart_</p>
+    <p class="text-gray-500 text-sm mb-6 leading-relaxed">Follow for more tools, financial wisdom, and unfiltered takes on money & life. 🧠💸</p>
+    <a href="https://www.instagram.com/_unfiltered_heart_/" target="_blank" rel="noopener" class="follow-btn" style="display:inline-flex;text-decoration:none;font-size:0.95rem;padding:13px 28px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="white" stroke="none"/></svg>
+      Open Instagram & Follow
+    </a>
+    <p class="text-xs text-gray-300 mt-4">Opens Instagram in a new tab</p>
+  </div>
+</div>
+
+
+<!-- MAIN CONTENT -->
+<div class="max-w-5xl mx-auto px-4 py-10">
+
+  <!-- INPUT SECTION -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 mb-10">
+    <h2 class="text-2xl mb-1">Your Loan Details</h2>
+    <p class="text-gray-400 text-sm mb-8">Enter your current home loan details to get your personalised freedom plan.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Loan Amount -->
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+          Loan Amount (₹)
+          <span class="tooltip-wrap ml-1 cursor-help">
+            <span class="inline-block w-4 h-4 rounded-full bg-gray-100 text-gray-400 text-center text-xs leading-4">?</span>
+            <span class="tooltip-box">The total principal amount you borrowed from the bank.</span>
+          </span>
+        </label>
+        <input type="number" id="principal" class="input-field" placeholder="e.g. 5000000" value="5000000" min="100000" step="50000">
+        <input type="range" id="principalRange" class="range-input mt-3" min="500000" max="20000000" step="100000" value="5000000">
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+          <span>₹5L</span><span id="principalDisplay" class="font-semibold text-gray-600">₹50,00,000</span><span>₹2Cr</span>
+        </div>
+      </div>
+
+      <!-- Interest Rate -->
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+          Annual Interest Rate (%)
+          <span class="tooltip-wrap ml-1 cursor-help">
+            <span class="inline-block w-4 h-4 rounded-full bg-gray-100 text-gray-400 text-center text-xs leading-4">?</span>
+            <span class="tooltip-box">Your home loan's annual interest rate as shown by your bank.</span>
+          </span>
+        </label>
+        <input type="number" id="rate" class="input-field" placeholder="e.g. 8.5" value="8.5" min="5" max="20" step="0.1">
+        <input type="range" id="rateRange" class="range-input mt-3" min="5" max="20" step="0.1" value="8.5">
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+          <span>5%</span><span id="rateDisplay" class="font-semibold text-gray-600">8.5%</span><span>20%</span>
+        </div>
+      </div>
+
+      <!-- Tenure -->
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">
+          Original Tenure (Years)
+          <span class="tooltip-wrap ml-1 cursor-help">
+            <span class="inline-block w-4 h-4 rounded-full bg-gray-100 text-gray-400 text-center text-xs leading-4">?</span>
+            <span class="tooltip-box">The original repayment period agreed with your bank.</span>
+          </span>
+        </label>
+        <input type="number" id="tenure" class="input-field" placeholder="e.g. 20" value="20" min="5" max="30" step="1">
+        <input type="range" id="tenureRange" class="range-input mt-3" min="5" max="30" step="1" value="20">
+        <div class="flex justify-between text-xs text-gray-400 mt-1">
+          <span>5 yrs</span><span id="tenureDisplay" class="font-semibold text-gray-600">20 yrs</span><span>30 yrs</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMI Display -->
+    <div class="mt-8 bg-amber-50 border border-amber-100 rounded-xl px-6 py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div>
+        <span class="text-xs font-semibold tracking-widest uppercase text-amber-500">Your Standard Monthly EMI</span>
+        <div class="text-3xl mt-1" style="font-family:'DM Serif Display',serif;" id="emiDisplay">₹0</div>
+      </div>
+      <div class="text-sm text-amber-700 max-w-xs leading-relaxed">
+        💡 Without any changes, you'll pay <span id="totalInterestBase" class="font-bold">₹0</span> in total interest over <span id="tenureYearsBase">0</span> years.
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS: CARDS -->
+  <div id="resultsSection">
+    <div class="flex items-center gap-3 mb-2">
+      <h2 class="text-2xl">Your 3 Freedom Strategies</h2>
+      <span class="badge badge-green">✦ Wealth Saved</span>
+    </div>
+    <p class="text-sm text-gray-400 mb-7">Each strategy has a <span class="text-amber-500 font-semibold">default setting</span> — but you can tweak the numbers to match your own capacity. Results update instantly.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+
+      <!-- ── Method 1 ── -->
+      <div class="result-card card-m1 animate-in" style="animation-delay:0.1s">
+        <div class="flex items-center justify-between mb-3">
+          <div class="badge badge-blue">Strategy 1</div>
+          <span class="text-xs text-gray-300">Prepayment</span>
+        </div>
+        <h3 class="text-lg mb-2 leading-snug">The Extra EMI</h3>
+
+        <!-- Description accordion -->
+        <div class="method-desc-box" style="background:#f0f6fc;border-radius:10px;padding:10px 12px;margin-bottom:14px">
+          <div class="text-xs text-blue-700 leading-relaxed">
+            💡 <strong>How it works:</strong> Once a year, you pay one extra EMI as a direct principal prepayment — on top of your regular EMIs. This reduces your outstanding balance faster, cutting both tenure and interest.<br><br>
+            <strong>When to do it:</strong> Bonus month, tax refund, or any windfall. Even one extra EMI a year makes a huge difference over 20 years.
+          </div>
+        </div>
+
+        <!-- Customise input -->
+        <div style="background:#e8f0fb;border-radius:10px;padding:12px 14px;margin-bottom:16px">
+          <label class="block text-xs font-semibold text-blue-600 tracking-widest uppercase mb-2">Extra prepayment per year</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <select id="m1Mode" style="background:white;border:1.5px solid #c5d8f5;border-radius:8px;padding:6px 10px;font-size:0.82rem;font-weight:600;color:#1a4f7a;outline:none;cursor:pointer" onchange="calculate()">
+              <option value="emi">× EMIs per year</option>
+              <option value="fixed">Fixed ₹ amount</option>
+            </select>
+            <input type="number" id="m1Value" value="1" min="0.5" max="12" step="0.5"
+              style="width:80px;background:white;border:1.5px solid #c5d8f5;border-radius:8px;padding:6px 10px;font-size:0.9rem;font-weight:700;color:#1a4f7a;outline:none;text-align:center"
+              oninput="calculate()">
+          </div>
+          <p class="text-xs text-blue-500 mt-2" id="m1Hint">= paying 1 extra EMI as lump-sum every year</p>
+        </div>
+
+        <div class="stat-big" id="m1Tenure">—</div>
+        <div class="text-xs text-gray-400 mt-1 mb-4">New tenure</div>
+        <div class="savings-pill" id="m1Savings">Calculating…</div>
+        <div class="mt-4">
+          <div class="flex justify-between text-xs text-gray-400 mb-1"><span>Faster than original</span><span id="m1Pct">—</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill bg-blue-500" id="m1Bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- ── Method 2 ── -->
+      <div class="result-card card-m2 animate-in" style="animation-delay:0.2s">
+        <div class="flex items-center justify-between mb-3">
+          <div class="badge badge-green">Strategy 2</div>
+          <span class="text-xs text-gray-300">Step-Up</span>
+        </div>
+        <h3 class="text-lg mb-2 leading-snug">The Annual Step-Up</h3>
+
+        <!-- Description -->
+        <div class="method-desc-box" style="background:#f0f9f5;border-radius:10px;padding:10px 12px;margin-bottom:14px">
+          <div class="text-xs text-green-700 leading-relaxed">
+            💡 <strong>How it works:</strong> Every year, you increase your monthly EMI by a fixed percentage. As your salary grows, your EMI grows with it — channelling more money into principal repayment.<br><br>
+            <strong>Why 7.5%?</strong> It mirrors the average annual salary increment in India. But if you get 10–12% hikes, you can set it higher. Even 5% makes a big impact.
+          </div>
+        </div>
+
+        <!-- Customise input -->
+        <div style="background:#e6f5f0;border-radius:10px;padding:12px 14px;margin-bottom:16px">
+          <label class="block text-xs font-semibold text-green-600 tracking-widest uppercase mb-2">Annual EMI increase (%)</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input type="range" id="m2Range" min="1" max="25" step="0.5" value="7.5"
+              style="-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:#c3e8d8;outline:none"
+              oninput="document.getElementById('m2Value').value=this.value; calculate()">
+            <div style="display:flex;align-items:center;background:white;border:1.5px solid #a8dcc5;border-radius:8px;padding:5px 8px;min-width:72px">
+              <input type="number" id="m2Value" value="7.5" min="1" max="25" step="0.5"
+                style="width:42px;border:none;outline:none;font-size:0.95rem;font-weight:700;color:#1a7a5e;text-align:center"
+                oninput="document.getElementById('m2Range').value=this.value; calculate()">
+              <span style="font-size:0.85rem;font-weight:700;color:#1a7a5e">%</span>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:0.68rem;color:#6b7280;margin-top:4px"><span>1% (Conservative)</span><span>25% (Aggressive)</span></div>
+          <p class="text-xs text-green-600 mt-2" id="m2Hint">Your EMI grows by 7.5% every year — like your salary</p>
+        </div>
+
+        <div class="stat-big" id="m2Tenure">—</div>
+        <div class="text-xs text-gray-400 mt-1 mb-4">New tenure</div>
+        <div class="savings-pill" id="m2Savings">Calculating…</div>
+        <div class="mt-4">
+          <div class="flex justify-between text-xs text-gray-400 mb-1"><span>Faster than original</span><span id="m2Pct">—</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill bg-green-500" id="m2Bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- ── Method 3 ── -->
+      <div class="result-card card-m3 animate-in" style="animation-delay:0.3s">
+        <div class="flex items-center justify-between mb-3">
+          <div class="badge badge-gold">⚡ Strategy 3</div>
+          <span class="text-xs text-gray-300">Hybrid</span>
+        </div>
+        <h3 class="text-lg mb-2 leading-snug">The Hybrid Power</h3>
+
+        <!-- Description -->
+        <div class="method-desc-box" style="background:#fdf9ec;border-radius:10px;padding:10px 12px;margin-bottom:14px">
+          <div class="text-xs leading-relaxed" style="color:#92600a">
+            💡 <strong>How it works:</strong> Combines both strategies — you increase your EMI annually <em>and</em> make an extra lump-sum prepayment once a year. Double attack on your principal.<br><br>
+            <strong>This is the most powerful.</strong> The tenure reduction here is dramatically better than either strategy alone. Best suited if you're disciplined about saving.
+          </div>
+        </div>
+
+        <!-- Customise inputs — both controls -->
+        <div style="background:#fdf3d0;border-radius:10px;padding:12px 14px;margin-bottom:16px">
+          <div class="mb-3">
+            <label class="block text-xs font-semibold tracking-widest uppercase mb-2" style="color:#92600a">Annual EMI increase (%)</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <input type="range" id="m3StepRange" min="1" max="25" step="0.5" value="7.5"
+                style="-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:#f5dfa0;outline:none"
+                oninput="document.getElementById('m3StepValue').value=this.value; calculate()">
+              <div style="display:flex;align-items:center;background:white;border:1.5px solid #e8c96a;border-radius:8px;padding:5px 8px;min-width:72px">
+                <input type="number" id="m3StepValue" value="7.5" min="1" max="25" step="0.5"
+                  style="width:42px;border:none;outline:none;font-size:0.95rem;font-weight:700;color:#92600a;text-align:center"
+                  oninput="document.getElementById('m3StepRange').value=this.value; calculate()">
+                <span style="font-size:0.85rem;font-weight:700;color:#92600a">%</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold tracking-widest uppercase mb-2" style="color:#92600a">Extra prepayment per year</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <select id="m3Mode" style="background:white;border:1.5px solid #e8c96a;border-radius:8px;padding:6px 10px;font-size:0.82rem;font-weight:600;color:#92600a;outline:none;cursor:pointer" onchange="calculate()">
+                <option value="emi">× EMIs per year</option>
+                <option value="fixed">Fixed ₹ amount</option>
+              </select>
+              <input type="number" id="m3Value" value="1" min="0.5" max="12" step="0.5"
+                style="width:80px;background:white;border:1.5px solid #e8c96a;border-radius:8px;padding:6px 10px;font-size:0.9rem;font-weight:700;color:#92600a;outline:none;text-align:center"
+                oninput="calculate()">
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-big" id="m3Tenure">—</div>
+        <div class="text-xs text-gray-400 mt-1 mb-4">New tenure</div>
+        <div class="savings-pill" id="m3Savings">Calculating…</div>
+        <div class="mt-4">
+          <div class="flex justify-between text-xs text-gray-400 mb-1"><span>Faster than original</span><span id="m3Pct">—</span></div>
+          <div class="progress-bar-bg"><div class="progress-bar-fill" id="m3Bar" style="width:0%;background:linear-gradient(90deg,#c8961e,#f0c84a)"></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CHART -->
+    <div class="chart-wrap mb-10 animate-in" style="animation-delay:0.4s">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h2 class="text-xl">Years to Complete Freedom</h2>
+          <p class="text-xs text-gray-400 mt-1">Fewer bars = faster freedom = more wealth in your hands</p>
+        </div>
+        <div class="flex items-center gap-4 text-xs text-gray-400">
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-gray-300 inline-block"></span>Original</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-blue-400 inline-block"></span>Strategy 1</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-green-500 inline-block"></span>Strategy 2</span>
+          <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded inline-block" style="background:#c8961e"></span>Strategy 3</span>
+        </div>
+      </div>
+      <div style="height: 260px; position: relative;">
+        <canvas id="tenureChart"></canvas>
+      </div>
+    </div>
+
+    <!-- COMPARISON TABLE -->
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-10 animate-in" style="animation-delay:0.5s">
+      <div class="px-8 py-6 border-b border-gray-100">
+        <h2 class="text-xl">Full Comparison Breakdown</h2>
+        <p class="text-xs text-gray-400 mt-1">Every rupee saved is wealth that stays with your family.</p>
+      </div>
+      <div class="overflow-x-auto">
+        <div class="table-row table-head" style="border-radius:0">
+          <span>Strategy</span>
+          <span>Tenure</span>
+          <span>Total Interest</span>
+          <span class="col-hide">Interest Saved</span>
+        </div>
+        <div id="tableBody">
+          <!-- filled by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIGHT BANNER -->
+    <div id="insightBanner" class="rounded-2xl p-7 text-white relative overflow-hidden" style="background: linear-gradient(135deg, #0f1923 60%, #1a4f7a);">
+      <div class="grain" style="opacity:0.3"></div>
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+        <div>
+          <div class="text-yellow-400 text-xs font-semibold tracking-widest uppercase mb-2">💰 Your Wealth Insight</div>
+          <p class="text-white/90 text-lg leading-relaxed max-w-xl" id="insightText">Calculate above to see your personalised insight.</p>
+        </div>
+        <div class="text-right shrink-0">
+          <div class="text-xs text-white/50 mb-1">Best strategy saves you</div>
+          <div class="text-4xl text-yellow-400" style="font-family:'DM Serif Display',serif" id="insightBestSavings">—</div>
+          <div class="text-xs text-white/50 mt-1" id="insightYearsSaved">— years earlier</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <!-- WHATSAPP SHARE SECTION -->
+  <div class="wa-section animate-in" style="animation-delay:0.6s">
+    <div class="flex items-start gap-4 mb-6 flex-wrap">
+      <div style="width:48px;height:48px;border-radius:14px;background:#25d366;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      </div>
+      <div>
+        <h2 class="text-xl mb-1">Share This Tool with Friends</h2>
+        <p class="text-sm text-gray-400 leading-relaxed">Know someone with a home loan? Send them this calculator on WhatsApp — it's the smartest gift you can give a friend. 🎁</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">Your Name</label>
+        <input type="text" id="waName" class="wa-input" placeholder="e.g. Rahul Sharma">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-2">Your Mobile Number</label>
+        <input type="tel" id="waMobile" class="wa-input" placeholder="e.g. 9876543210" maxlength="10">
+      </div>
+    </div>
+
+    <p class="text-xs text-gray-400 mb-4 flex items-start gap-2">
+      <svg class="w-4 h-4 text-gray-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      Your details are only used to personalise the WhatsApp message. Nothing is stored or shared.
+    </p>
+
+    <button class="wa-btn" onclick="shareOnWhatsApp()">
+      <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Send This Calculator on WhatsApp
+    </button>
+
+    <div class="wa-success" id="waSuccess">
+      <svg class="w-5 h-5 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      WhatsApp opened! Share the message with your friends & family. 🙌
+    </div>
+  </div>
+
+
+<div class="text-center py-8 text-xs text-gray-400 border-t border-gray-100 mt-4 px-4">
+  <div class="flex items-center justify-center gap-2 mb-2">
+    <div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:white;font-weight:700;flex-shrink:0">S</div>
+    <span>Created by <a href="https://www.instagram.com/_unfiltered_heart_/" target="_blank" rel="noopener" style="color:#e1306c;font-weight:600;text-decoration:none">@_unfiltered_heart_</a> — subhuti</span>
+  </div>
+  Calculations are illustrative. Consult a financial advisor for personalised advice.
+</div>
+
+<script>
+  // ─── State ───────────────────────────────────────────────────────────────────
+  let chartInstance = null;
+
+  // ─── Sync sliders ↔ inputs ───────────────────────────────────────────────────
+  function syncInputRange(inputId, rangeId, displayId, formatter) {
+    const input = document.getElementById(inputId);
+    const range = document.getElementById(rangeId);
+    const display = document.getElementById(displayId);
+
+    input.addEventListener('input', () => {
+      range.value = input.value;
+      display.textContent = formatter(input.value);
+      calculate();
+    });
+    range.addEventListener('input', () => {
+      input.value = range.value;
+      display.textContent = formatter(range.value);
+      calculate();
+    });
+  }
+
+  const fmtINR = v => '₹' + Number(v).toLocaleString('en-IN');
+  const fmtPct = v => parseFloat(v).toFixed(1) + '%';
+  const fmtYrs = v => v + ' yrs';
+
+  syncInputRange('principal', 'principalRange', 'principalDisplay', fmtINR);
+  syncInputRange('rate', 'rateRange', 'rateDisplay', fmtPct);
+  syncInputRange('tenure', 'tenureRange', 'tenureDisplay', fmtYrs);
+
+  // ─── Core math ───────────────────────────────────────────────────────────────
+  function calcEMI(P, r, n) {
+    // r = monthly rate, n = months
+    if (r === 0) return P / n;
+    return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  }
+
+  function totalInterestBase(P, emi, n) {
+    return emi * n - P;
+  }
+
+  // ── Simulation: Method 1 (custom prepayment) ─────────────────────────────
+  function simulateMethod1(P, r, emi) {
+    const mode  = document.getElementById('m1Mode').value;
+    const val   = parseFloat(document.getElementById('m1Value').value) || 1;
+    const annualPrepay = mode === 'emi' ? emi * val : val;
+
+    // Update hint text
+    const hintEl = document.getElementById('m1Hint');
+    if (mode === 'emi') {
+      hintEl.textContent = val === 1
+        ? '= paying 1 extra EMI as lump-sum every year'
+        : `= paying ${val} extra EMIs as lump-sum every year`;
+    } else {
+      hintEl.textContent = `= paying ₹${Math.round(annualPrepay).toLocaleString('en-IN')} extra every year`;
+    }
+
+    let balance = P, months = 0, totalInterest = 0;
+    while (balance > 0.01 && months < 600) {
+      months++;
+      const interest  = balance * r;
+      const principal = Math.min(emi - interest, balance);
+      if (principal <= 0) { months = 600; break; }
+      totalInterest += interest;
+      balance -= principal;
+      if (balance < 0) balance = 0;
+      if (months % 12 === 0) {
+        balance -= annualPrepay;
+        if (balance < 0) balance = 0;
+      }
+    }
+    return { months, totalInterest };
+  }
+
+  // ── Simulation: Method 2 (custom step-up %) ──────────────────────────────
+  function simulateMethod2(P, r, baseEMI) {
+    const stepPct = parseFloat(document.getElementById('m2Value').value) || 7.5;
+    const factor  = 1 + stepPct / 100;
+
+    document.getElementById('m2Hint').textContent =
+      `Your EMI grows by ${stepPct}% every year — like your salary`;
+
+    let balance = P, months = 0, totalInterest = 0, currentEMI = baseEMI;
+    while (balance > 0.01 && months < 600) {
+      months++;
+      if (months > 1 && (months - 1) % 12 === 0) currentEMI *= factor;
+      const interest  = balance * r;
+      const principal = Math.min(currentEMI - interest, balance);
+      if (principal <= 0) { months = 600; break; }
+      totalInterest += interest;
+      balance -= principal;
+      if (balance < 0) balance = 0;
+    }
+    return { months, totalInterest };
+  }
+
+  // ── Simulation: Method 3 (custom step-up + custom prepayment) ────────────
+  function simulateMethod3(P, r, baseEMI) {
+    const stepPct     = parseFloat(document.getElementById('m3StepValue').value) || 7.5;
+    const factor      = 1 + stepPct / 100;
+    const mode        = document.getElementById('m3Mode').value;
+    const val         = parseFloat(document.getElementById('m3Value').value) || 1;
+    const annualPrepay = mode === 'emi' ? baseEMI * val : val;
+
+    let balance = P, months = 0, totalInterest = 0, currentEMI = baseEMI;
+    while (balance > 0.01 && months < 600) {
+      months++;
+      if (months > 1 && (months - 1) % 12 === 0) currentEMI *= factor;
+      const interest  = balance * r;
+      const principal = Math.min(currentEMI - interest, balance);
+      if (principal <= 0) { months = 600; break; }
+      totalInterest += interest;
+      balance -= principal;
+      if (balance < 0) balance = 0;
+      if (months % 12 === 0) {
+        balance -= annualPrepay;
+        if (balance < 0) balance = 0;
+      }
+    }
+    return { months, totalInterest };
+  }
+
+  function monthsToStr(m) {
+    const y = Math.floor(m / 12);
+    const mo = m % 12;
+    if (mo === 0) return `${y} yrs`;
+    return `${y} yrs ${mo} mo`;
+  }
+
+  // ─── Render ───────────────────────────────────────────────────────────────────
+  function calculate() {
+    const P = parseFloat(document.getElementById('principal').value) || 0;
+    const annualRate = parseFloat(document.getElementById('rate').value) || 0;
+    const tenureYears = parseInt(document.getElementById('tenure').value) || 0;
+
+    if (!P || !annualRate || !tenureYears) return;
+
+    const r = annualRate / 12 / 100;
+    const n = tenureYears * 12;
+    const emi = calcEMI(P, r, n);
+    const baseInterest = emi * n - P;
+
+    // Update EMI display
+    document.getElementById('emiDisplay').textContent = '₹' + Math.round(emi).toLocaleString('en-IN');
+    document.getElementById('totalInterestBase').textContent = '₹' + Math.round(baseInterest).toLocaleString('en-IN');
+    document.getElementById('tenureYearsBase').textContent = tenureYears;
+
+    // Simulate methods
+    const m1 = simulateMethod1(P, r, emi);
+    const m2 = simulateMethod2(P, r, emi);
+    const m3 = simulateMethod3(P, r, emi);
+
+    const m1Saved = baseInterest - m1.totalInterest;
+    const m2Saved = baseInterest - m2.totalInterest;
+    const m3Saved = baseInterest - m3.totalInterest;
+
+    const m1YrsSaved = (n - m1.months) / 12;
+    const m2YrsSaved = (n - m2.months) / 12;
+    const m3YrsSaved = (n - m3.months) / 12;
+
+    // Update cards
+    document.getElementById('m1Tenure').textContent = monthsToStr(m1.months);
+    document.getElementById('m2Tenure').textContent = monthsToStr(m2.months);
+    document.getElementById('m3Tenure').textContent = monthsToStr(m3.months);
+
+    document.getElementById('m1Savings').textContent = '🌱 Save ₹' + Math.round(m1Saved).toLocaleString('en-IN');
+    document.getElementById('m2Savings').textContent = '🌿 Save ₹' + Math.round(m2Saved).toLocaleString('en-IN');
+    document.getElementById('m3Savings').textContent = '🌳 Save ₹' + Math.round(m3Saved).toLocaleString('en-IN');
+
+    // Progress bars: % of original tenure saved
+    const m1Pct = Math.min(100, Math.round(m1YrsSaved / tenureYears * 100));
+    const m2Pct = Math.min(100, Math.round(m2YrsSaved / tenureYears * 100));
+    const m3Pct = Math.min(100, Math.round(m3YrsSaved / tenureYears * 100));
+
+    document.getElementById('m1Bar').style.width = m1Pct + '%';
+    document.getElementById('m2Bar').style.width = m2Pct + '%';
+    document.getElementById('m3Bar').style.width = m3Pct + '%';
+
+    document.getElementById('m1Pct').textContent = m1Pct + '% faster';
+    document.getElementById('m2Pct').textContent = m2Pct + '% faster';
+    document.getElementById('m3Pct').textContent = m3Pct + '% faster';
+
+    // Table — dynamic labels reflecting user's custom settings
+    const m2Step  = parseFloat(document.getElementById('m2Value').value) || 7.5;
+    const m3Step  = parseFloat(document.getElementById('m3StepValue').value) || 7.5;    const m1mode  = document.getElementById('m1Mode').value;
+    const m1val   = parseFloat(document.getElementById('m1Value').value) || 1;
+    const m3mode  = document.getElementById('m3Mode').value;
+    const m3val   = parseFloat(document.getElementById('m3Value').value) || 1;
+
+    const m1Label = m1mode === 'emi'
+      ? `💡 Strategy 1 — ${m1val}× EMI prepayment/yr`
+      : `💡 Strategy 1 — ₹${Math.round(m1val).toLocaleString('en-IN')} prepayment/yr`;
+    const m2Label = `📈 Strategy 2 — ${m2Step}% step-up/yr`;
+    const m3Label = m3mode === 'emi'
+      ? `⚡ Strategy 3 — ${m3Step}% + ${m3val}× EMI/yr`
+      : `⚡ Strategy 3 — ${m3Step}% + ₹${Math.round(m3val).toLocaleString('en-IN')}/yr`;
+
+    const tableRows = [
+      { label:'🏦 Original Plan', labelColor:'#6b7280', months:n, totalInterest:baseInterest, saved:0, bg:'#faf8f4' },
+      { label:m1Label, labelColor:'#1a4f7a', months:m1.months, totalInterest:m1.totalInterest, saved:m1Saved, bg:'#f0f6fc' },
+      { label:m2Label, labelColor:'#1a7a5e', months:m2.months, totalInterest:m2.totalInterest, saved:m2Saved, bg:'#f0f9f5' },
+      { label:m3Label, labelColor:'#c8961e', months:m3.months, totalInterest:m3.totalInterest, saved:m3Saved, bg:'#fdf9ec' },
+    ];
+
+    document.getElementById('tableBody').innerHTML = tableRows.map(row => `
+      <div class="table-row table-body-row" style="background:${row.bg}">
+        <span class="font-medium text-sm" style="color:${row.labelColor}">${row.label}</span>
+        <span class="text-sm font-semibold text-gray-700">${monthsToStr(row.months)}</span>
+        <span class="text-sm text-gray-600">₹${Math.round(row.totalInterest).toLocaleString('en-IN')}</span>
+        <span class="text-sm col-hide ${row.saved > 0 ? 'text-green-600 font-semibold' : 'text-gray-400'}">
+          ${row.saved > 0 ? '+₹' + Math.round(row.saved).toLocaleString('en-IN') : '—'}
+        </span>
+      </div>
+    `).join('');
+
+    // Chart
+    const labels = ['Original', 'Strategy 1\nExtra EMI', 'Strategy 2\n7.5% Step-Up', 'Strategy 3\nHybrid'];
+    const values = [
+      +(n / 12).toFixed(1),
+      +(m1.months / 12).toFixed(1),
+      +(m2.months / 12).toFixed(1),
+      +(m3.months / 12).toFixed(1)
+    ];
+    const colors = ['#d1d5db', '#60a5fa', '#34d399', '#f0c84a'];
+    const borderColors = ['#9ca3af', '#3b82f6', '#10b981', '#c8961e'];
+
+    if (chartInstance) {
+      chartInstance.data.datasets[0].data = values;
+      chartInstance.update('active');
+    } else {
+      const ctx = document.getElementById('tenureChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Years',
+            data: values,
+            backgroundColor: colors,
+            borderColor: borderColors,
+            borderWidth: 2,
+            borderRadius: 10,
+            borderSkipped: false,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` ${ctx.parsed.y} years`
+              },
+              backgroundColor: '#0f1923',
+              titleColor: '#fff',
+              bodyColor: '#ccc',
+              padding: 12,
+              cornerRadius: 10
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: Math.ceil(tenureYears * 1.1),
+              grid: { color: '#f0ede8' },
+              ticks: {
+                font: { family: 'DM Sans', size: 11 },
+                color: '#9ca3af',
+                callback: v => v + ' yrs'
+              },
+              border: { display: false }
+            },
+            x: {
+              grid: { display: false },
+              ticks: {
+                font: { family: 'DM Sans', size: 11 },
+                color: '#6b7280'
+              },
+              border: { display: false }
+            }
+          },
+          animation: {
+            duration: 700,
+            easing: 'easeInOutQuart'
+          }
+        }
+      });
+    }
+
+    // Insight banner — dynamic strategy names
+    const bestSaving = Math.max(m1Saved, m2Saved, m3Saved);
+    const bestYrsSaved = Math.max(m1YrsSaved, m2YrsSaved, m3YrsSaved).toFixed(1);
+    const bestStrategy = bestSaving === m3Saved
+      ? `Hybrid (${m3Step}% step-up + prepayment)`
+      : bestSaving === m2Saved
+      ? `${m2Step}% Annual Step-Up`
+      : `Extra Prepayment`;
+
+    document.getElementById('insightBestSavings').textContent = '₹' + Math.round(bestSaving).toLocaleString('en-IN');
+    document.getElementById('insightYearsSaved').textContent = bestYrsSaved + ' years earlier';
+    document.getElementById('insightText').textContent =
+      `Using the ${bestStrategy} strategy, you can close your ₹${Math.round(P / 100000)}L loan ${bestYrsSaved} years ahead of schedule and keep ₹${Math.round(bestSaving).toLocaleString('en-IN')} in your family's wealth — instead of paying it as interest.`;
+  }
+
+  // ─── WhatsApp Share + Lead Capture ──────────────────────────────────────────
+  // 👇 ONCE YOU HOST THIS FILE, PASTE YOUR REAL URL HERE
+  const TOOL_URL = "PASTE_YOUR_HOSTED_URL_HERE";
+
+  // 👇 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL BELOW (between the quotes)
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz3NsHizA940tIh8-TgPUrQmdtS0qCRherPsJkkv1_EGPO2ULsS0-81PGKg_B5W3KWB4Q/exec";
+
+  function shareOnWhatsApp() {
+    const name   = document.getElementById('waName').value.trim();
+    const mobile = document.getElementById('waMobile').value.trim();
+
+    // Validate name
+    if (!name) {
+      const el = document.getElementById('waName');
+      el.focus(); el.style.borderColor = '#f87171';
+      el.placeholder = 'Please enter your name';
+      setTimeout(() => { el.style.borderColor = ''; el.placeholder = 'e.g. Rahul Sharma'; }, 2500);
+      return;
+    }
+
+    // Validate mobile — must be 10 digits
+    if (!mobile || !/^\d{10}$/.test(mobile)) {
+      const el = document.getElementById('waMobile');
+      el.focus(); el.style.borderColor = '#f87171';
+      el.placeholder = 'Enter valid 10-digit number';
+      setTimeout(() => { el.style.borderColor = ''; el.placeholder = 'e.g. 9876543210'; }, 2500);
+      return;
+    }
+
+    // ── 1. Silently send lead to Google Sheet ────────────────────────────────
+    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== "PASTE_YOUR_APPS_SCRIPT_URL_HERE") {
+      fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",           // Apps Script doesn't return CORS headers; no-cors is fine for fire-and-forget
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, mobile, source: "Home Loan Calculator" })
+      }).catch(() => {}); // Silent fail — never block the user experience
+    }
+
+    // ── Step 2: Open WhatsApp with personalised message ───────────────────
+    // Use the hardcoded URL if set, otherwise fall back to current page URL
+    const resolvedURL = (TOOL_URL && TOOL_URL !== "PASTE_YOUR_HOSTED_URL_HERE")
+      ? TOOL_URL
+      : window.location.href;
+    const msg =
+`Hey! 👋 I'm ${name} and I just used this *Home Loan Tenure Reducer* calculator by *subhuti* (@_unfiltered_heart_ on Instagram).
+
+It shows you *3 smart strategies* to close your home loan years earlier and save ₹lakhs in interest! 🏠💰
+
+✅ Extra EMI trick
+✅ 7.5% step-up method
+✅ The Hybrid (most powerful!)
+
+Try it here 👇
+${resolvedURL}
+
+Follow *@_unfiltered_heart_* on Instagram for more such money wisdom! 🔥`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+
+    // ── 3. Show success message ──────────────────────────────────────────────
+    const successEl = document.getElementById('waSuccess');
+    successEl.style.display = 'flex';
+    setTimeout(() => successEl.style.display = 'none', 6000);
+  }
+
+  // ─── Init ─────────────────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    // Set initial display values
+    document.getElementById('principalDisplay').textContent = fmtINR(document.getElementById('principal').value);
+    document.getElementById('rateDisplay').textContent = fmtPct(document.getElementById('rate').value);
+    document.getElementById('tenureDisplay').textContent = fmtYrs(document.getElementById('tenure').value);
+    calculate();
+  });
+</script>
+</body>
+</html>
