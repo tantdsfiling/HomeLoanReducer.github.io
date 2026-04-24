@@ -1100,7 +1100,7 @@
   }
 
   // ─── WhatsApp Share + Lead Capture ──────────────────────────────────────────
-  const TOOL_URL       = "https://tantdsfiling.github.io/HomeLoanReducer.github.io/";
+  const TOOL_URL       = "https://home-loan-reducer-github-io.vercel.app/";
   const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz3NsHizA940tIh8-TgPUrQmdtS0qCRherPsJkkv1_EGPO2ULsS0-81PGKg_B5W3KWB4Q/exec";
   const IG_URL         = "https://www.instagram.com/_unfiltered_heart_/";
   const IG_HANDLE      = "@_unfiltered_heart_";
@@ -1128,12 +1128,16 @@
     }
 
     // ── 1. Silently send lead to Google Sheet ────────────────────────────────
-    fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({ name, mobile, source: "Home Loan Calculator" })
-    }).catch(() => {});
+    // Send as GET with URL params — works perfectly with no-cors
+const params = new URLSearchParams({
+  name: name,
+  mobile: mobile,
+  source: "Home Loan Calculator"
+});
+fetch(`${APPS_SCRIPT_URL}?${params.toString()}`, {
+  method: "GET",
+  mode: "no-cors"
+}).catch(() => {});
 
     // ── 2. Open WhatsApp with personalised message ────────────────────────
     const lang = document.documentElement.lang || 'en';
